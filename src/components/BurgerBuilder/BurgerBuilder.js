@@ -92,7 +92,7 @@ class BurgerBuilder extends React.Component {
 
     //modal popup continue
     purchaseContinueHandler = () => {
-        this.setState({loading: true});
+        /*this.setState({loading: true});
         const order = {
             ingredients: this.state.ingredients,
             totalPrice: this.state.totalPrice,
@@ -114,7 +114,8 @@ class BurgerBuilder extends React.Component {
             .catch(error => {
                 this.setState({loading: false, purchasePopup: false});
                 console.log(error);
-            });
+            }); */
+        this.props.history.push('/checkout');
     };
 
     render() {
@@ -131,7 +132,7 @@ class BurgerBuilder extends React.Component {
         if (this.state.loading) {
             orderSummary = <Spinner/>;
         }
-        if(this.state.ingredients){
+        if (this.state.ingredients) {
             orderSummary = <OrderSummary purchasedContinue={this.purchaseContinueHandler}
                                          purchaseCancel={this.purchasePopupCancelHandler}
                                          ingredients={this.state.ingredients}

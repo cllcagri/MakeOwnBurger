@@ -4,7 +4,6 @@ import Burger from "../Burger/Burger";
 import BuildControls from "../Burger/BuildControls/BuildControls";
 import Modal from "../../components/UI/Modal/Modal";
 import OrderSummary from "../OrderSummary/OrderSummary";
-import Axios from "../../axios-orders";
 import Spinner from "../UI/Spinner/Spinner";
 import WithErrorHandler from "../../hoc/withErrorHandler/withErrorHandler";
 
@@ -92,33 +91,11 @@ class BurgerBuilder extends React.Component {
 
     //modal popup continue
     purchaseContinueHandler = () => {
-        /*this.setState({loading: true});
-        const order = {
-            ingredients: this.state.ingredients,
-            totalPrice: this.state.totalPrice,
-            customer: {
-                name: "Tony Kroos",
-                address: {
-                    street: "Madrid St.",
-                    zipCode: 1234,
-                    country: "Germany"
-                },
-                email: "tonyKross@gmail.com"
-            },
-            deliveryMethod: "fastest"
-        }
-        Axios.post("/orders.json", order)
-            .then(response => {
-                this.setState({loading: false, purchasePopup: false});
-            })
-            .catch(error => {
-                this.setState({loading: false, purchasePopup: false});
-                console.log(error);
-            }); */
         let queryParams = [];
         for(let i in this.state.ingredients){
             queryParams.push(encodeURIComponent(i) +  '=' + encodeURIComponent(this.state.ingredients[i]));
         }
+        queryParams.push('price=' + this.state.totalPrice);
         const queryString = queryParams.join('&');
         this.props.history.push({
             pathname: '/checkout',
@@ -173,4 +150,4 @@ class BurgerBuilder extends React.Component {
 }
 
 
-export default WithErrorHandler(BurgerBuilder, Axios);
+export default BurgerBuilder;

@@ -3,15 +3,68 @@ import Button from "../../UI/Button/Button";
 import "./ContactData.css";
 import Axios from "../../../axios-orders";
 import Spinner from "../../UI/Spinner/Spinner";
+import Input from "../../UI/Input/Input";
 
 
 class ContactData extends React.Component {
     state = {
-        name: '',
-        email: '',
-        address: {
-            street: '',
-            postalCode: ''
+        orderForm: {
+            name: {
+                elementType: 'input',
+                elementConfig: {
+                    type: 'text',
+                    placeHolder: 'Your name'
+                },
+                value: ''
+            },
+            street: {
+                elementType: 'input',
+                elementConfig: {
+                    type: 'text',
+                    placeHolder: 'Street'
+                },
+                value: ''
+            },
+            zipCode: {
+                elementType: 'input',
+                elementConfig: {
+                    type: 'text',
+                    placeHolder: 'Zip Code'
+                },
+                value: ''
+            },
+            country: {
+                elementType: 'input',
+                elementConfig: {
+                    type: 'text',
+                    placeHolder: 'Country'
+                },
+                value: ''
+            },
+            email: {
+                elementType: 'input',
+                elementConfig: {
+                    type: 'email',
+                    placeHolder: 'Your e-mail'
+                },
+                value: ''
+            },
+            deliveryMethod: {
+                elementType: 'select',
+                elementConfig: {
+                    option: [
+                        {
+                            value: 'fastest',
+                            displayValue: 'Fastest'
+                        },
+                        {
+                            value: 'regular',
+                            displayValue: 'Regular'
+                        }],
+                    placeHolder: 'Regular'
+                },
+                value: ''
+            }
         },
         loading: false
     };
@@ -21,17 +74,7 @@ class ContactData extends React.Component {
         this.setState({loading: true});
         const order = {
             ingredients: this.props.ingredients,
-            totalPrice: this.props.price,
-            customer: {
-                name: "Tony Kroos",
-                address: {
-                    street: "Madrid St.",
-                    zipCode: 1234,
-                    country: "Germany"
-                },
-                email: "tonyKross@gmail.com"
-            },
-            deliveryMethod: "fastest"
+            totalPrice: this.props.price
         }
 
         Axios.post("/orders.json", order)
@@ -47,13 +90,25 @@ class ContactData extends React.Component {
     };
 
     render() {
+        const formElementsArray = [];
+        for (let key in this.state.orderForm) {
+            formElementsArray.push({
+                id: key,
+                config: this.state.orderForm[key]
+            });
+        }
         let form = (
             <form>
-                <input className="Input" type="text" name="name" placeholder="name"/>
-                <input className="Input" type="email" name="email" placeholder="email"/>
-                <input className="Input" type="text" name="street" placeholder="street"/>
-                <input className="Input" type="text" name="postalCode" placeholder="postalCode"/>
+                {
+                    formElementsArray.map(formElement => (
+                        <Input key={formElement.id}
+                            elementType={formElement.config.elementType}
+                               elementConfig={formElement.config.elementConfig}
+                               value={formElement.config.value}/>
+                    ))
+                }
                 <Button buttonType="Button Success" clicked={this.orderHandler}>ORDER</Button>
+
             </form>
         );
         if (this.state.loading) {

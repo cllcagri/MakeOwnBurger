@@ -13,7 +13,7 @@ class ContactData extends React.Component {
                 elementType: 'input',
                 elementConfig: {
                     type: 'text',
-                    placeHolder: 'Your name'
+                    placeholder: 'Your name'
                 },
                 value: ''
             },
@@ -21,7 +21,7 @@ class ContactData extends React.Component {
                 elementType: 'input',
                 elementConfig: {
                     type: 'text',
-                    placeHolder: 'Street'
+                    placeholder: 'Street'
                 },
                 value: ''
             },
@@ -29,7 +29,7 @@ class ContactData extends React.Component {
                 elementType: 'input',
                 elementConfig: {
                     type: 'text',
-                    placeHolder: 'Zip Code'
+                    placeholder: 'Zip Code'
                 },
                 value: ''
             },
@@ -37,7 +37,7 @@ class ContactData extends React.Component {
                 elementType: 'input',
                 elementConfig: {
                     type: 'text',
-                    placeHolder: 'Country'
+                    placeholder: 'Country'
                 },
                 value: ''
             },
@@ -45,23 +45,17 @@ class ContactData extends React.Component {
                 elementType: 'input',
                 elementConfig: {
                     type: 'email',
-                    placeHolder: 'Your e-mail'
+                    placeholder: 'Your e-mail'
                 },
                 value: ''
             },
             deliveryMethod: {
                 elementType: 'select',
                 elementConfig: {
-                    option: [
-                        {
-                            value: 'fastest',
-                            displayValue: 'Fastest'
-                        },
-                        {
-                            value: 'regular',
-                            displayValue: 'Regular'
-                        }],
-                    placeHolder: 'Regular'
+                    options: [
+                        {value: 'fastest', displayValue: 'Fastest'},
+                        {value: 'cheapest', displayValue: 'Cheapest'}
+                    ]
                 },
                 value: ''
             }
@@ -89,6 +83,20 @@ class ContactData extends React.Component {
 
     };
 
+    inputChangeHandler = (event, identifier) => {
+        debugger;
+        const updatedOrderForm = {
+            ...this.state.orderForm
+        };
+        const updatedFormElement = {
+            ...updatedOrderForm[identifier]
+        };
+        updatedFormElement.value = event.target.value;
+        updatedOrderForm[identifier] = updatedFormElement;
+        this.setState({orderForm: updatedOrderForm});
+
+    }
+
     render() {
         const formElementsArray = [];
         for (let key in this.state.orderForm) {
@@ -102,9 +110,10 @@ class ContactData extends React.Component {
                 {
                     formElementsArray.map(formElement => (
                         <Input key={formElement.id}
-                            elementType={formElement.config.elementType}
+                               elementType={formElement.config.elementType}
                                elementConfig={formElement.config.elementConfig}
-                               value={formElement.config.value}/>
+                               value={formElement.config.value}
+                               changed={(event) => this.inputChangeHandler(event, formElement.id)}/>
                     ))
                 }
                 <Button buttonType="Button Success" clicked={this.orderHandler}>ORDER</Button>

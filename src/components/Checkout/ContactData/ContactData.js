@@ -15,7 +15,13 @@ class ContactData extends React.Component {
                     type: 'text',
                     placeholder: 'Your name'
                 },
-                value: ''
+                value: '',
+                validation: {
+                    required: true,
+                    minLength: 5,
+                    maxLength: 10
+                },
+                valid: false
             },
             street: {
                 elementType: 'input',
@@ -23,7 +29,11 @@ class ContactData extends React.Component {
                     type: 'text',
                     placeholder: 'Street'
                 },
-                value: ''
+                value: '',
+                validation: {
+                    required: true
+                },
+                valid: false
             },
             zipCode: {
                 elementType: 'input',
@@ -31,7 +41,11 @@ class ContactData extends React.Component {
                     type: 'text',
                     placeholder: 'Zip Code'
                 },
-                value: ''
+                value: '',
+                validation: {
+                    required: true
+                },
+                valid: false
             },
             country: {
                 elementType: 'input',
@@ -39,7 +53,11 @@ class ContactData extends React.Component {
                     type: 'text',
                     placeholder: 'Country'
                 },
-                value: ''
+                value: '',
+                validation: {
+                    required: true
+                },
+                valid: false
             },
             email: {
                 elementType: 'input',
@@ -47,7 +65,11 @@ class ContactData extends React.Component {
                     type: 'email',
                     placeholder: 'Your e-mail'
                 },
-                value: ''
+                value: '',
+                validation: {
+                    required: true
+                },
+                valid: false
             },
             deliveryMethod: {
                 elementType: 'select',
@@ -57,7 +79,11 @@ class ContactData extends React.Component {
                         {value: 'cheapest', displayValue: 'Cheapest'}
                     ]
                 },
-                value: ''
+                value: '',
+                validation: {
+                    required: true
+                },
+                valid: false
             }
         },
         loading: false
@@ -66,9 +92,14 @@ class ContactData extends React.Component {
     orderHandler = (event) => {
         event.preventDefault();
         this.setState({loading: true});
+        const formData = {};
+        for (let identifier in this.state.orderForm) {
+            formData[identifier] = this.state.orderForm[identifier].value;
+        }
         const order = {
             ingredients: this.props.ingredients,
-            totalPrice: this.props.price
+            totalPrice: this.props.price,
+            orderData: formData
         }
 
         Axios.post("/orders.json", order)
@@ -92,9 +123,28 @@ class ContactData extends React.Component {
             ...updatedOrderForm[identifier]
         };
         updatedFormElement.value = event.target.value;
+        updatedFormElement.valid = this.checkValidity(updatedFormElement.value, updatedFormElement.validation);
         updatedOrderForm[identifier] = updatedFormElement;
         this.setState({orderForm: updatedOrderForm});
 
+    }
+
+    checkValidity = (value, rules) => {
+        let isValid = true;
+
+        if (rules.required) {
+            isValid = value.trim() !== '' && isValid;
+        }
+
+        if (rules.minLength) {
+            isValid = value.length >= rules.minLength;
+        }
+
+        if (rules.maxLength) {
+            isValid = value.length <= rules.maxLength;
+        }
+
+        return isValid;
     }
 
     render() {
@@ -106,7 +156,7 @@ class ContactData extends React.Component {
             });
         }
         let form = (
-            <form>
+            <form onSubmit={this.orderHandler}>
                 {
                     formElementsArray.map(formElement => (
                         <Input key={formElement.id}
@@ -116,7 +166,7 @@ class ContactData extends React.Component {
                                changed={(event) => this.inputChangeHandler(event, formElement.id)}/>
                     ))
                 }
-                <Button buttonType="Button Success" clicked={this.orderHandler}>ORDER</Button>
+                <Button buttonType="Button Success">ORDER</Button>
 
             </form>
         );

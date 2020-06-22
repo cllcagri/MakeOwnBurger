@@ -2,6 +2,7 @@ import React from "react";
 import "./Order.css";
 
 const Order = (props) => {
+    debugger;
     const ingOrder = Object.keys(props.ingredients)
         .map(igKey => {
             return <a key={igKey}><span

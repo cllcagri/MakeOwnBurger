@@ -58,7 +58,7 @@ export const fetchOrdersFail = (error) => {
     }
 }
 
-export const fetchOrdersStart = (error) => {
+export const fetchOrdersStart = () => {
     return {
         type: actionTypes.FETCH_ORDER_START
     }
@@ -66,6 +66,7 @@ export const fetchOrdersStart = (error) => {
 
 export const fetchOrders = () => {
     return dispatch => {
+        dispatch(fetchOrdersStart());
         Axios.get('/orders.json')
             .then(res => {
                 const fetchOrder = [];

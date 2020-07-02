@@ -4,6 +4,7 @@ import NavigationItems from "../NavigationItems/NavigationItems";
 import "./SideDrawer.css";
 import Aux from "../../../hoc/Aux";
 import Backdrop from "../../UI/Backdrop/Backdrop";
+import Toolbar from "../Toolbar/Toolbar";
 
 const SideDrawer = (props) => {
     let attachedClassed = props.open ? "SideDrawer Open" : "SideDrawer Close";
@@ -14,7 +15,7 @@ const SideDrawer = (props) => {
             <div className={attachedClassed}>
                 <Logo height="9%"/>
                 <nav>
-                    <NavigationItems/>
+                    <NavigationItems isAuthenticated={props.isAuth} />
                 </nav>
             </div>
         </Aux>

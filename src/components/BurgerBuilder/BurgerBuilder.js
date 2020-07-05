@@ -10,6 +10,7 @@ import {connect} from "react-redux";
 import axios from '../../axios-orders';
 import * as burgerBuilderActions from "../../store/actions/index";
 import * as OrderActions from "../../store/actions/order";
+import * as AuthActions from "../../store/actions/auth";
 
 
 class BurgerBuilder extends React.Component {
@@ -37,7 +38,12 @@ class BurgerBuilder extends React.Component {
     }
 
     purchasePopupHandler = () => {
-        this.setState({purchasePopup: true});
+        if(this.props.isAuthenticated){
+            this.setState({purchasePopup: true});
+        }else {
+            this.props.onSetAuthRedirectPath('/checkout');
+            this.props.history.push("/auth");
+        }
     }
 
     purchasePopupCancelHandler = () => {
@@ -76,6 +82,7 @@ class BurgerBuilder extends React.Component {
                                disableControl={disabledInfo}
                                purchasable={this.updatePurchaseState(this.props.ings)}
                                ordered={this.purchasePopupHandler}
+                               isAuth={this.props.isAuthenticated}
                                price={this.props.price}/>
             </div>);
         }
@@ -96,7 +103,8 @@ const mapStateToProps = state => {
     return {
         ings: state.burgerBuilder.ingredients,
         price: state.burgerBuilder.totalPrice,
-        error: state.burgerBuilder.error
+        error: state.burgerBuilder.error,
+        isAuthenticated: state.auth.token !== null
     };
 }
 
@@ -105,7 +113,8 @@ const mapDispatchToProps = dispatch => {
         addIngredientHandler: (ingName) => dispatch(burgerBuilderActions.addIngredient(ingName)),
         removeIngredientHandler: (ingName) => dispatch(burgerBuilderActions.removeIngredient(ingName)),
         onInitIngredients : () => dispatch(burgerBuilderActions.initIngredients()),
-        onInitPurchase : () => dispatch(OrderActions.purchaseInit())
+        onInitPurchase : () => dispatch(OrderActions.purchaseInit()),
+        onSetAuthRedirectPath: (path) => dispatch(AuthActions.setAuthRedirectPath(path))
     }
 }
 

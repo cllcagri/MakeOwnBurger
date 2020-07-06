@@ -120,7 +120,6 @@ class Auth extends React.Component {
         const errorMessage = this.props.error ? <p>{this.props.error.message}</p> : null;
 
         let authRedirect = null;
-        debugger;
         if (this.props.isAuthenticated) {
             authRedirect = <Redirect to={this.props.authRedirectPath}/>;
         }

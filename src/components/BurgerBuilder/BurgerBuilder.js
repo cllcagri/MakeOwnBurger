@@ -13,7 +13,7 @@ import * as OrderActions from "../../store/actions/order";
 import * as AuthActions from "../../store/actions/auth";
 
 
-class BurgerBuilder extends React.Component {
+export class BurgerBuilder extends React.Component {
 
     state = {
         purchasePopup: false
